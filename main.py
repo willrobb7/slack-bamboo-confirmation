@@ -17,7 +17,7 @@ def lambda_handler(event, context):
     data = get_bamboo_employees()
 
     logger.info(data)
-
+    process_employees(data)
     return {
         'statusCode': 200,
         'body': json.dumps('Hello from Lambda!')
@@ -38,7 +38,8 @@ def get_bamboo_employees():
                 "middleName",
                 "preferredName",
                 "lastName",
-                "workEmail"
+                "workEmail",
+                "location"
             ]
         }),
         auth=bamboo_auth
@@ -49,3 +50,7 @@ def get_bamboo_employees():
 
     return response.json().get("employees")
 
+
+def process_employees(employees: dict):
+    for employee in employees:
+        print(employee)
