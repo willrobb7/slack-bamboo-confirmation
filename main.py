@@ -13,7 +13,7 @@ logger.setLevel(logging.INFO)
 domain = os.environ.get("DOMAIN")
 bamboo_api_key = os.environ.get("API_KEY")
 bamboo_auth = HTTPBasicAuth(bamboo_api_key, "x")
-slack_token = os.environ.get('SLACK_API_TOKEN')
+slack_token = os.environ.get('SLACK_TOKEN')
 
 # with statement is a context manager
 message_format = None
