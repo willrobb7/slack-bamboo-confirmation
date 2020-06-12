@@ -12,15 +12,20 @@ domain = os.environ.get("DOMAIN")
 bamboo_api_key = os.environ.get("API_KEY")
 bamboo_auth = HTTPBasicAuth(bamboo_api_key, "x")
 
+#with statement is a context manager
+message_format = None
+with open("message_format.json","r") as json_file:
+    message_format = json.loads(json_file.read())
+
 
 def lambda_handler(event, context):
     data = get_bamboo_employees()
 
-    logger.info(data)
+    # logger.info(data)
     process_employees(data)
     return {
         'statusCode': 200,
-        'body': json.dumps('Hello from Lambda!')
+        'body': json.dumps('All Good!')
     }
 
 
@@ -35,11 +40,12 @@ def get_bamboo_employees():
             "fields": [
                 "status",
                 "firstName",
-                "middleName",
                 "preferredName",
                 "lastName",
                 "workEmail",
-                "location"
+                "address1",
+                "address2",
+                "zipcode"
             ]
         }),
         auth=bamboo_auth
@@ -53,4 +59,9 @@ def get_bamboo_employees():
 
 def process_employees(employees: dict):
     for employee in employees:
-        print(employee)
+        status = employee.get("status")
+        if status.lower() != "active":
+            continue
+        print((employee))
+
+        #TODO: Create nice message ready for sending (done)
