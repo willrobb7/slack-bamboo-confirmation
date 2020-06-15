@@ -18,7 +18,7 @@ slack_token = os.environ.get('SLACK_TOKEN')
 # with statement is a context manager
 message_format = None
 with open("message_format.json", "r") as json_file:
-    message_format = json.loads(json_file.read())
+    message_format = json_file.read()
 
 
 def lambda_handler(event, context):
@@ -30,10 +30,7 @@ def lambda_handler(event, context):
     slack_client = Slack(token=slack_token)
 
     for i in ["jack.popple@infinityworks.com", "will.robinson@infinityworks.com"]:
-        slack_client.message_user(i, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
-                                     "Phasellus dignissim massa ac lorem efficitur ultrices. In vitae gravida nibh, "
-                                     "sit amet convallis eros."
-                                  )
+        slack_client.message_user(i, "Blah Blah", blocks=message_format)
 
     return {
         'statusCode': 200,
