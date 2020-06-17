@@ -3,7 +3,7 @@
     "type": "section",
     "text": {
       "type": "plain_text",
-      "text": "Please update us on your address in BambooHR.",
+      "text": "We are going to be sending out asset stickers for all new devices ordered during the current pandemic, as a result of this we need to know the following.",
       "emoji": true
     }
   },
@@ -14,14 +14,33 @@
     "type": "section",
     "text": {
       "type": "mrkdwn",
-      "text": "Is your address correct in BambooHR"
+      "text": "Is your address correct in <https://infinityworks.bamboohr.com|BambooHR>?"
     },
     "accessory": {
+      "action_id": "selection",
       "type": "static_select",
       "placeholder": {
         "type": "plain_text",
         "text": "Select an item",
         "emoji": true
+      },
+      "confirm": {
+        "title": {
+          "type": "plain_text",
+          "text": "Confirmation"
+        },
+        "text": {
+          "type": "mrkdwn",
+          "text": "Are you sure the selected option is correct?"
+        },
+        "confirm": {
+          "type": "plain_text",
+          "text": "Submit"
+        },
+        "deny": {
+          "type": "plain_text",
+          "text": "Cancel"
+        }
       },
       "options": [
         {
@@ -50,20 +69,5 @@
         }
       ]
     }
-  },
-  {
-    "type": "actions",
-    "elements": [
-      {
-        "type": "button",
-        "text": {
-          "type": "plain_text",
-          "text": "Submit",
-          "emoji": true
-        },
-        "style": "primary",
-        "value": ""
-      }
-    ]
   }
 ]
