@@ -14,7 +14,7 @@
     "type": "section",
     "text": {
       "type": "mrkdwn",
-      "text": "Is your address correct in <https://infinityworks.bamboohr.com|BambooHR>?"
+      "text": "Is your address correct in <https://infinityworks.bamboohr.com|BambooHR> for us to send asset sticker(s) to?"
     },
     "accessory": {
       "action_id": "selection",

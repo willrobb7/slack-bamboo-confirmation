@@ -148,7 +148,7 @@ def determine_callback_response(selected_option: str):
 
     elif selected_option == "elsewhere":
         return f"Thank you, please would you be able to message {user_ref} the address you would like " \
-               "the asset stickers sent to."
+               "the asset sticker(s) sent to."
 
 
 def process_employees(employees: set):
