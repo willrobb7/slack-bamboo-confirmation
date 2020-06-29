@@ -4,6 +4,7 @@ import os
 import urllib
 from typing import List
 
+import boto3
 import requests
 from requests.auth import HTTPBasicAuth
 
@@ -33,9 +34,26 @@ def process_event(event):
     return params
 
 
-# Todo: rename below function/ recreate Lambda with new name
-def debug_function(event: dict, context):  # Callback Lambda
+def push_record_to_dynamo(username: str, response: str):
+    response_table = os.environ["RESPONSE_TABLE"]
+
+    try:
+        dynamodb = boto3.resource('dynamodb')
+        table = dynamodb.Table(response_table)
+
+        table.put_item(
+            Item={
+                "username": username,
+                "response": response
+            }
+        )
+    except Exception as e:
+        logger.critical(e)
+
+
+def slack_bamboo_callback(event: dict, context):  # Callback Lambda entry point
     payload: dict = process_event(event)
+    user = payload.get("user")
 
     response_url = payload.get("response_url")
     actions: dict = payload.get("actions")[0]
@@ -44,14 +62,18 @@ def debug_function(event: dict, context):  # Callback Lambda
     logger.info(payload)
     logger.info(selected_option)
 
-    response = determine_callback_response(selected_option.get("value"))
+    user_response = selected_option.get("value")
+
+    callback_response = determine_callback_response(user_response)
 
     requests.post(
         response_url,
         data=json.dumps({
-            "text": response
+            "text": callback_response
         })
     )
+
+    push_record_to_dynamo(user.get("username"), user_response)
 
     return {
         'statusCode': 200,
@@ -59,7 +81,7 @@ def debug_function(event: dict, context):  # Callback Lambda
     }
 
 
-def slack_bamboo_confirmation(event, context):  # Initiating Lambda
+def slack_bamboo_confirmation(event, context):  # Initiating Lambda entry point
     bamboo_data = get_bamboo_employees()
 
     # process_employees()
@@ -133,10 +155,6 @@ def get_bamboo_employees():
     return response.json().get("employees")
 
 
-def get_email_from_bamboo_data():
-    pass
-
-
 def determine_callback_response(selected_option: str):
     user_ref = "<@UN9RPQM88>"  # References Will Robinson on Slack
 
@@ -155,12 +173,6 @@ def process_employees(employees: set):
     slack_client = Slack(token=slack_token)
 
     for employee in employees:
-        # status = employee.get("status")
-        # email = employee.get("workEmail")
-
-        # if status.lower() != "active" or not email:  # Checks if user is inactive or has a missing workEmail (== None)
-        #     logger.info(f"Skipping {employee}")
-        #     continue
 
         logger.info(f"Should be messaging {employee}")
-        # slack_client.message_user(email, "Is your address correct in BambooHR?", blocks=message_format)
+        slack_client.message_user(employee, "Is your address correct in BambooHR?", blocks=message_format)

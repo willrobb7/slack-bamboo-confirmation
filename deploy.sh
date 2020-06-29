@@ -12,4 +12,4 @@ zip -r "${CWD}/function.zip" *.py message_format.json
 echo "Updating function in AWS"
 
 aws lambda update-function-code --profile sts --region eu-west-2 --function-name slack-bamboo-confirmation-dev --zip-file fileb://function.zip
-aws lambda update-function-code --profile sts --region eu-west-2 --function-name slack-debug-function --zip-file fileb://function.zip
+aws lambda update-function-code --profile sts --region eu-west-2 --function-name slack-bamboo-callback-dev --zip-file fileb://function.zip
